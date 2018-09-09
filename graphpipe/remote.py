@@ -3,11 +3,21 @@ import requests
 from graphpipe import convert
 
 
-def execute(uri, inp, input_name=None, output_name=None):
+def execute(uri, inp, input_names=None, output_names=None):
+    def listify(l):
+        if l is None:
+            return []
+        if not isinstance(l, (list, tuple)):
+            return [l]
+        return l
+
+    inp = listify(inp)
+    input_names = listify(input_names)
+    output_names = listify(output_names)
     res = execute_multi(uri,
-                        [inp],
-                        None if input_name is None else [input_name],
-                        None if output_name is None else [output_name])
+                        inp,
+                        input_names,
+                        output_names)
     if len(res) == 1:
         res = res[0]
     return res
